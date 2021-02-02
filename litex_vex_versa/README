@@ -1,0 +1,10 @@
+LiteX VexRiscv SoC for the Versa ECP5
+
+Generated using
+
+    python ~/litex-boards/litex_boards/targets/versa_ecp5.py --build
+
+litex ba7c503fb65e37cfc3f618e69003304f952dd5ff
+litex-boards f32c61d5d299e76a630ed5f8e19a450ed8d38853
+litedram 2c60861929a317af697267d6219da43d10dcf1fa
+yosys beeaad19045f017acb27e38eb452457726932a8f
