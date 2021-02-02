@@ -8,6 +8,7 @@ from datetime import datetime
 
 def main():
 	num_runs = 16
+	timeout = 900 # 15 minutes
 	if len(sys.argv) == 1:
 		benchmarks = [
 			o for o in os.listdir(".") if path.isdir(o) and not o.startswith(".")
@@ -33,7 +34,7 @@ def main():
 					args = ["nextpnr-{}".format(config['benchmark']['arch'])]
 					args += config['benchmark']['args'].split(' ')
 					args += ["-l", logfile, "--seed", str(run+1), "--timing-allow-fail"]
-					output = subprocess.check_output(args, cwd=benchmark, stderr=subprocess.STDOUT)
+					output = subprocess.check_output(args, cwd=benchmark, stderr=subprocess.STDOUT, timeout=timeout)
 					end = datetime.now()
 					domain_fmaxes = re.findall(r'Max frequency for clock\s+\'([^\']+)\': ([0-9.]+) MHz', output.decode('utf-8'))
 					clk_fmax = None
@@ -46,6 +47,8 @@ def main():
 					fmaxes.append(clk_fmax)
 				except subprocess.CalledProcessError:
 					print("    run {} failed!".format(run))
+				except subprocess.TimeoutExpired:
+					print("    run {} timed out!".format(run))
 			threads.append(threading.Thread(target=runner, args=[i+1]))
 
 		for t in threads: t.start()
